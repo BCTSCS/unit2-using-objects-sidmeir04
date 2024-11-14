@@ -5,13 +5,15 @@ public class Website {
 
 
  // Put your code here
-     String domain;
-     String topLevelDomain;
-     int numUsers;
-    public Website(String wDomain,String wTDomain,int Users){
+    private String domain;
+    private String topLevelDomain;
+    private int numUsers;
+    private GeoLocation geoLocation;
+    public Website(String wDomain,String wTDomain,int Users,double latitude,double longitude){
         domain = wDomain;
         topLevelDomain = wTDomain;
         numUsers = Users;
+        geoLocation = new GeoLocation(latitude, longitude);
     }
 
 //Default constructor
@@ -26,12 +28,9 @@ public class Website {
         numUsers = 0;
     }
 
-// Specify website URL
-// Register a new website
-
-
-// Specify website URL
-// Register an old website
+    public double findDistanceTo(GeoLocation g){
+        return geoLocation.distanceFrom(g);
+    }
 
 
     // Method to fetch data 
@@ -78,14 +77,19 @@ public class Website {
 
     // Main method to test the API call
     public static void main(String[] args) {
-        Website website = new Website("randomuser", "me"); // Create an instance of Website
-        website.fetchData("api"); // Call the instance method
+        Website meta = new Website("meta","com",10000,44.2995,120.8346);
         
-        Website website2 = new Website();
-        System.out.println(website2);
+        Website amazon = new Website("amazon","com",10000,38.9339,77.1773);
         
-        Website website3 = new Website("google","com",10000);
-        System.out.println(website3);
+        Website google = new Website("google","com",10000,41.2219,95.8608);
+
+        Website microsoft = new Website("microsoft","com",10000,36.6646,78.3897);
+
+        System.out.println("Distance between Google and Amazon: " + google.findDistanceTo(amazon.geoLocation) + " miles");
+        System.out.println("Distance between Google and Meta: " + google.findDistanceTo(meta.geoLocation) + " miles");
+        System.out.println("Distance between Google and Microsoft: " + google.findDistanceTo(microsoft.geoLocation) + " miles");
+        System.out.println("Distance between Meta and Amazon: " + meta.findDistanceTo(amazon.geoLocation) + " miles");
+        System.out.println("Distance between Meta and Micrsoft: " + meta.findDistanceTo(microsoft.geoLocation) + " miles");
     }
 }
 
