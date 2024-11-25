@@ -6,7 +6,7 @@ public class Gene {
         dna = g;
     }
 
-    public int countNucleotides(String g, Character nucleotide){
+    public static int countNucleotides(String g, Character nucleotide){
         int count = 0;
         for (Character c : g.toCharArray()){
             if (c == nucleotide){
@@ -16,7 +16,7 @@ public class Gene {
         return count;
     }
 
-    public boolean potentialGene(String dna){
+    public static boolean potentialGene(String dna){
         if(dna.startsWith("atc") && dna.endsWith("tag")){
             if (dna.length()%3==0){
                 return true;
@@ -25,23 +25,36 @@ public class Gene {
         return false;
     }
 
-    public String findGenes(String dna, int startIndex){
-        String str = dna.substring(startIndex);
-        int index = str.indexOf("atc");
-        int index2 = str.indexOf("tag");
-        String finalStr = "";
-        while(index != -1){
-            if(potentialGene(str.substring(index,index2+3))){
-                finalStr = finalStr + str.substring(index+3,index2);
-
+    public static int findStopCodon(String genome, int start){
+        if (genome.length()%3 != 0) return -1;
+        for (int i = start; i < genome.length()-2;i+=3){
+            if (genome.substring(i,i+3).equals("TAA")
+                || genome.substring(i,i+3).equals("TAG")
+                || genome.substring(i,i+3).equals("TGA")){
+                return i;
             }
-            int index = str.indexOf("atc");
-            int index2 = str.indexOf("tag");
         }
-        return "";
+        return -1;
     }
+
+    public static String findGenes(String dna, int start){
+        int geneStart = -1;
+        for (int i = start; i < dna.length()-2;i+=3){
+            if(dna.substring(i,i+3).equals("ATG")){
+                geneStart = i;
+                break;
+            }
+        }
+        if (geneStart == -1) return "";
+        int end = findStopCodon(dna, geneStart);
+        if (end == -1) return "";
+        return dna.substring(geneStart, end);
+    }
+
     
     public static void main(String[] args) {
-
+        System.out.println(findStopCodon("ATGCATAGCGCATAG",0));
+        System.out.println(countNucleotides("ATGCATAGCGCATAG",'G'));
+        System.out.println(findGenes("ATGCATAGCGCATAG",0));
     }
 }
